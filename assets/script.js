@@ -9,11 +9,25 @@ var searchHistory = document.getElementById("search-history");
 
 // Function to fetch weather data from the OpenWeatherMap API
 function getWeatherData(city) {
-    // Make an API request to retrieve weather data for the specified city
-    // You need to use the `fetch` API or another method to make a GET request to the OpenWeatherMap API.
-    // Construct the URL with the city name and API key.
-    // Parse the response and update the currentWeather and forecast sections with the data.
-    // Display city name, date, weather icon, temperature, humidity, and wind speed.
+    // Construct the API URL with the city name and your API key
+    var apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${API_KEY}`;
+
+    // Make the API request using the fetch API
+    fetch(apiUrl)
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return response.json();
+        })
+        .then((data) => {
+            // Parse the response data and update the currentWeather and forecast sections
+            displayWeatherData(data);
+        })
+        .catch((error) => {
+            console.error("Error fetching data:", error);
+            // You can handle and display an error message to the user here
+        });
 }
 
 // Function to save the city to localStorage
