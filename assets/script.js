@@ -40,6 +40,41 @@ function displayWeatherData(data) {
     var temperature = data.list[0].main.temp;
     var humidity = data.list[0].main.humidity;
     var windSpeed = data.list[0].wind.speed;
+
+    // Function to display weather data in the UI
+function displayWeatherData(data) {
+    // Extract relevant data for the 5-day forecast
+    var forecastData = data.list.slice(1, 6); // Get the next 5 days
+
+    // Clear the forecast section
+    forecast.innerHTML = "";
+
+    // Loop through the forecastData and create HTML elements for each day
+    forecastData.forEach((dayData) => {
+        var date = new Date(dayData.dt * 1000).toLocaleDateString();
+        var weatherIcon = dayData.weather[0].icon;
+        var temperature = dayData.main.temp;
+        var humidity = dayData.main.humidity;
+        var windSpeed = dayData.wind.speed;
+
+        // Create a container for each day's data
+        const dayContainer = document.createElement("div");
+        dayContainer.classList.add("forecast-day");
+
+        // Update the day's data
+        dayContainer.innerHTML = `
+            <h3>${date}</h3>
+            <img src="https://openweathermap.org/img/w/${weatherIcon}.png" alt="Weather Icon">
+            <p>Temperature: ${temperature}°C</p>
+            <p>Humidity: ${humidity}%</p>
+            <p>Wind Speed: ${windSpeed} m/s</p>
+        `;
+
+        // Append the day's container to the forecast section
+        forecast.appendChild(dayContainer);
+    });
+}
+
 };
 // Function to save the city to localStorage
 function saveCityToLocalStorage(city) {
