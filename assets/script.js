@@ -1,4 +1,4 @@
-var API_KEY = "ad03ec6026a6a854547434fe2090eef0"; 
+var API_KEY = "ad03ec6026a6a854547434fe2090eef0"; // Replace with your API key
 var apiUrl = "https://api.openweathermap.org/data/2.5/forecast";
 
 var searchForm = document.getElementById("search-form");
@@ -19,6 +19,7 @@ function getWeatherData(city) {
             return response.json();
         })
         .then((data) => {
+            displayCurrentWeather(data);
             displayWeatherData(data);
             saveCityToLocalStorage(city); // Save the city to search history
         })
@@ -29,9 +30,29 @@ function getWeatherData(city) {
         });
 }
 
-// Function to display weather data in the UI
+// Function to display current weather data in the UI
+function displayCurrentWeather(data) {
+    var city = data.city.name;
+    var date = new Date(data.list[0].dt * 1000).toLocaleDateString();
+    var temperatureKelvin = data.list[0].main.temp;
+    var temperatureFahrenheit = ((temperatureKelvin - 273.15) * 9/5) + 32;
+    var weatherIcon = data.list[0].weather[0].icon;
+    var humidity = data.list[0].main.humidity;
+    var windSpeed = data.list[0].wind.speed;
+
+    // Update the currentWeather section with current weather data
+    currentWeather.innerHTML = `
+        <h2>Current Weather in ${city}</h2>
+        <p>Date: ${date}</p>
+        <img src="https://openweathermap.org/img/w/${weatherIcon}.png" alt="Weather Icon">
+        <p>Temperature: ${temperatureFahrenheit.toFixed(2)}°F</p>
+        <p>Humidity: ${humidity}%</p>
+        <p>Wind Speed: ${windSpeed} m/s</p>
+    `;
+}
+
+// Function to display 5-day forecast weather data in the UI
 function displayWeatherData(data) {
-    // Extract relevant data for the 5-day forecast
     var forecastData = data.list;
 
     // Clear the forecast section
@@ -47,9 +68,7 @@ function displayWeatherData(data) {
         var humidity = dayData.main.humidity;
         var windSpeed = dayData.wind.speed;
 
-        // Check if it's a new date
         if (date !== currentDate) {
-            // Create a container for each day's data
             var dayContainer = document.createElement("div");
             dayContainer.classList.add("forecast-day");
 
@@ -61,7 +80,6 @@ function displayWeatherData(data) {
                 <p>Wind Speed: ${windSpeed} m/s</p>
             `;
 
-            // Append the day's container to the forecast section
             forecast.appendChild(dayContainer);
 
             currentDate = date;
