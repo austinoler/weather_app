@@ -30,6 +30,17 @@ function getWeatherData(city) {
         });
 }
 
+// Function to display weather data in the UI
+function displayWeatherData(data) {
+    // Extract relevant data from the response and update the UI
+    // Example: Display city name, date, weather icon, temperature, humidity, and wind speed
+    var city = data.city.name;
+    var date = new Date(data.list[0].dt * 1000); // Convert timestamp to date
+    var weatherIcon = data.list[0].weather[0].icon;
+    var temperature = data.list[0].main.temp;
+    var humidity = data.list[0].main.humidity;
+    var windSpeed = data.list[0].wind.speed;
+};
 // Function to save the city to localStorage
 function saveCityToLocalStorage(city) {
     // Store the city in localStorage to maintain search history.
